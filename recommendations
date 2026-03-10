@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Рекомендованные профессии - Career Navigator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Дополнительные стили для страницы рекомендаций */
+        .recommendation-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(89, 118, 172, 0.1);
+            border: 1px solid rgba(155, 185, 224, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(89, 118, 172, 0.2);
+            border-color: var(--cornflower-blue);
+        }
+
+        .recommendation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--coffee-crema), var(--cornflower-blue));
+            border-radius: 20px 0 0 20px;
+        }
+
+        .profession-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .profession-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--cornflower-blue);
+            margin-bottom: 8px;
+            font-family: 'Educational Gothic', sans-serif;
+        }
+
+        .match-badge {
+            background: linear-gradient(135deg, var(--coffee-crema) 0%, #d4945a 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(193, 128, 65, 0.2);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Детали карточки (скрыты по умолчанию) */
+        .profession-details {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(155, 185, 224, 0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: var(--shadowed-lace);
+            margin-top: 10px;
+        }
+
+        .attributes-section {
+            margin-top: 20px;
+        }
+
+        .attributes-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0 0;
+        }
+
+        .attribute-item {
+            background: rgba(244, 241, 232, 0.5);
+            border-radius: 14px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(155, 185, 224, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .attribute-item:hover {
+            background: rgba(155, 185, 224, 0.1);
+            border-color: var(--soft-sky-blue);
+        }
+
+        .scale-name {
+            color: var(--cornflower-blue);
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Educational Gothic', sans-serif;
+        }
+
+        .scale-values {
+            color: var(--shadowed-lace);
+            font-size: 14px;
+            font-family: 'Mulish', sans-serif;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 15px;
+            font-family: 'Mulish', sans-serif;
+        }
+
+        .priority-HIGH {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .priority-MEDIUM {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-orange);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
+        .priority-LOW {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-green);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .empty-recommendations {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 70px;
+            color: var(--soft-sky-blue);
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            color: var(--cornflower-blue);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-family: 'Educational Gothic', sans-serif;
+        }
+
+        .empty-text {
+            color: var(--shadowed-lace);
+            font-size: 18px;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            font-family: 'Mulish', sans-serif;
+        }
+
+        /* Стили для шкал */
+        .scales-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 180px;
+            margin-left: 20px;
+        }
+
+        .scale-compact {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scale-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .scale-label {
+            font-size: 13px;
+            color: var(--shadowed-lace);
+            font-weight: 500;
+        }
+
+        .scale-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--cornflower-blue);
+            background: rgba(155, 185, 224, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .scale-bar {
+            width: 180px;
+            height: 6px;
+            background: rgba(155, 185, 224, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scale-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+
+        .scale-fill-difficulty {
+            background: #F1642E;
+        }
+
+        .scale-fill-demand {
+            background: #A3B565;
+        }
+
+        .scale-fill-communication {
+            background: #504E76;
+        }
+
+        /* Бейдж направления */
+        .direction-badge {
+            background: rgba(155,185,224,0.15);
+            color: var(--cornflower-blue);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        /* Информация о зарплате */
+        .salary-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .salary-amount {
+            font-weight: 600;
+            color: var(--cornflower-blue);
+        }
+
+        .profession-meta {
+            color: var(--shadowed-lace);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        /* Стили для расширенной информации */
+        .details-section {
+            margin-bottom: 25px;
+        }
+
+        .details-title {
+            font-size: 18px;
+            color: var(--cornflower-blue);
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(155, 185, 224, 0.3);
+            font-family: 'Educational Gothic', sans-serif;
+        }
+
+        .details-content {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(155,185,224,0.15);
+            color: var(--cornflower-blue);
+            padding: 6px 14px;
+            border-radius: 12px;
+            margin: 3px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .institution-tag {
+            background: rgba(100,200,150,0.15);
+            color: #2e7d32;
+        }
+
+        /* Шкалы для расширенной карточки (линейные) */
+        .scales-expanded {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 25px 0;
+            padding: 25px;
+            background: rgba(244, 241, 232, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(155, 185, 224, 0.2);
+        }
+
+        .scale-expanded {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scale-expanded-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .scale-expanded-label {
+            font-size: 16px;
+            color: var(--cornflower-blue);
+            font-weight: 600;
+        }
+
+        .scale-expanded-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cornflower-blue);
+        }
+
+        .scale-expanded-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(155, 185, 224, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .scale-expanded-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease-out;
+        }
+
+        .scale-expanded-description {
+            font-size: 14px;
+            color: var(--shadowed-lace);
+            min-height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .profession-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .match-badge {
+                align-self: flex-start;
+            }
+
+            .attribute-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .priority-badge {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+
+            .scales-compact {
+                width: 100%;
+                margin-left: 0;
+                min-width: auto;
+            }
+
+            .scale-bar {
+                width: 100%;
+            }
+
+            .scales-expanded {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="career-body">
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg career-navbar">
+        <div class="container">
+            <a class="navbar-brand career-navbar-brand" href="index.html">Career Navigation</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link career-nav-link" href="index.html"><i></i>Главная</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link career-nav-link" href="search.html"><i></i>Поиск профессий</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link career-nav-link" href="lk.html"><i></i>Личный кабинет</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn career-logout-btn" href="login.html"><i></i>Выйти</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Фоновые круги -->
+    <div class="career-bg-circles">
+        <div class="career-circle-1"></div>
+        <div class="career-circle-2"></div>
+        <div class="career-circle-3"></div>
+        <div class="career-circle-4"></div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="career-dashboard-container">
+        <!-- Заголовок страницы -->
+        <div class="career-welcome-card">
+            <h1 class="career-welcome-title">Рекомендованные профессии</h1>
+            <p class="career-welcome-subtitle">
+                На основе ваших результатов тестирования мы подобрали профессии, которые лучше всего соответствуют вашим склонностям и предпочтениям.
+            </p>
+        </div>
+
+        <!-- Блок для пустых результатов (всегда показываем "Рекомендаций пока нет" в статической версии) -->
+        <div class="career-welcome-card mt-4">
+            <div class="empty-recommendations">
+                <div class="empty-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3 class="empty-title">Рекомендаций пока нет</h3>
+                <p class="empty-text">
+                    Чтобы получить персональные рекомендации, пройдите хотя бы один психологический тест в личном кабинете.
+                </p>
+                <a href="lk.html" class="career-btn-test" style="max-width: 300px; margin: 0 auto; display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, var(--coffee-crema) 0%, #d4945a 100%); color: white; border-radius: 12px; text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-play-circle mr-2"></i>Перейти к тестам
+                </a>
+            </div>
+        </div>
+
+        <!-- Информационный блок -->
+        <div class="career-welcome-card mt-4">
+            <h3 style="color: var(--cornflower-blue); font-family: 'Educational Gothic', sans-serif;">
+                <i></i>Как формируются рекомендации?
+            </h3>
+            <div class="row mt-3">
+                <div class="col-md-4 mb-3">
+                    <div style="background: rgba(155, 185, 224, 0.1); padding: 20px; border-radius: 15px; height: 100%;">
+                        <div style="font-size: 36px; color: var(--coffee-crema); margin-bottom: 15px; text-align: center;">
+
+                        </div>
+                        <h5 style="color: var(--cornflower-blue); text-align: center; font-family: 'Educational Gothic', sans-serif;">
+                            Анализ тестов
+                        </h5>
+                        <p style="color: var(--shadowed-lace); text-align: center; font-size: 14px; font-family: 'Mulish', sans-serif;">
+                            Система анализирует ваши результаты по методикам Климова, Потемкиной и другим тестам
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div style="background: rgba(155, 185, 224, 0.1); padding: 20px; border-radius: 15px; height: 100%;">
+                        <div style="font-size: 36px; color: var(--coffee-crema); margin-bottom: 15px; text-align: center;">
+                        </div>
+                        <h5 style="color: var(--cornflower-blue); text-align: center; font-family: 'Educational Gothic', sans-serif;">
+                            Сопоставление параметров
+                        </h5>
+                        <p style="color: var(--shadowed-lace); text-align: center; font-size: 14px; font-family: 'Mulish', sans-serif;">
+                            Ваши склонности сравниваются с требованиями профессий по критериям
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div style="background: rgba(155, 185, 224, 0.1); padding: 20px; border-radius: 15px; height: 100%;">
+                        <div style="font-size: 36px; color: var(--coffee-crema); margin-bottom: 15px; text-align: center;">
+
+                        </div>
+                        <h5 style="color: var(--cornflower-blue); text-align: center; font-family: 'Educational Gothic', sans-serif;">
+                            Сортировка
+                        </h5>
+                        <p style="color: var(--shadowed-lace); text-align: center; font-size: 14px; font-family: 'Mulish', sans-serif;">
+                            Профессии сортируются по cовпадениям от наиболее до наименее подходящих
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Пустой скрипт (удалена логика загрузки данных, так как в статической версии всегда показываем "Рекомендаций пока нет") -->
+    <script>
+        // В статической версии никаких действий не требуется
+        console.log('Статическая страница рекомендаций');
+    </script>
+</body>
+</html>
