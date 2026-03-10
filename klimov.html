@@ -3,14 +3,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Тест ДДО Климова</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Подключаем существующий файл стилей -->
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ СТРАНИЦЫ ТЕСТА */
-        
         .career-test-page {
             min-height: 100vh;
             padding: 20px;
@@ -78,7 +76,6 @@
             transition: all 0.3s;
         }
         
-        /* УБРАЛ transform при наведении на карточку вопроса */
         .career-question-card:hover {
             box-shadow: 0 10px 25px rgba(89, 118, 172, 0.1);
         }
@@ -125,7 +122,6 @@
             position: relative;
         }
         
-        /* УБРАЛ transform при наведении на вариант ответа */
         .career-answer-option:hover {
             border-color: var(--soft-sky-blue);
             box-shadow: 0 8px 20px rgba(155, 185, 224, 0.15);
@@ -186,7 +182,6 @@
             color: white;
         }
         
-        /* НОВЫЕ СТИЛИ ДЛЯ КНОПОК */
         .career-test-btn-primary {
             background: linear-gradient(135deg, var(--cornflower-blue) 0%, #5976AC 100%);
             border: none;
@@ -488,14 +483,16 @@
             const options = document.querySelectorAll('.career-answer-option');
             options.forEach(opt => {
                 const radio = opt.querySelector('input[type="radio"]');
-                if (radio && radio.name === `q${questionId}` && radio.value !== undefined) {
-                    // Просто для наглядности, но radio не имеет value в нашей разметке
+                if (radio && radio.name === `q${questionId}`) {
                     if (answer === 'A' && opt.innerHTML.includes(questions.find(q => q.id === questionId).a)) {
                         opt.classList.add('selected');
+                        radio.checked = true;
                     } else if (answer === 'B' && opt.innerHTML.includes(questions.find(q => q.id === questionId).b)) {
                         opt.classList.add('selected');
+                        radio.checked = true;
                     } else {
                         opt.classList.remove('selected');
+                        radio.checked = false;
                     }
                 }
             });
@@ -640,3 +637,4 @@
 </body>
 </html>
 ```
+
