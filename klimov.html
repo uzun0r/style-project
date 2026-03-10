@@ -1,0 +1,642 @@
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест ДДО Климова</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Подключаем существующий файл стилей -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ СТРАНИЦЫ ТЕСТА */
+        
+        .career-test-page {
+            min-height: 100vh;
+            padding: 20px;
+            background-color: var(--parchment-white);
+        }
+        
+        .career-test-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(89, 118, 172, 0.15);
+            border: 1px solid rgba(155, 185, 224, 0.3);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+        
+        .career-test-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--soft-sky-blue);
+        }
+        
+        .career-test-title {
+            color: var(--cornflower-blue);
+            font-weight: 700;
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-description {
+            color: var(--shadowed-lace);
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-info {
+            background: rgba(155, 185, 224, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--coffee-crema);
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-info h5 {
+            color: var(--cornflower-blue);
+            margin-bottom: 10px;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-question-card {
+            background: rgba(244, 241, 232, 0.5);
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(155, 185, 224, 0.2);
+            transition: all 0.3s;
+        }
+        
+        /* УБРАЛ transform при наведении на карточку вопроса */
+        .career-question-card:hover {
+            box-shadow: 0 10px 25px rgba(89, 118, 172, 0.1);
+        }
+        
+        .career-question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--coffee-crema), #d4945a);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 600;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--cornflower-blue);
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-answer-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .career-answer-option {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            background: white;
+            border: 2px solid rgba(155, 185, 224, 0.3);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        /* УБРАЛ transform при наведении на вариант ответа */
+        .career-answer-option:hover {
+            border-color: var(--soft-sky-blue);
+            box-shadow: 0 8px 20px rgba(155, 185, 224, 0.15);
+        }
+        
+        .career-answer-option.selected {
+            background: rgba(155, 185, 224, 0.08);
+            border-color: var(--cornflower-blue);
+            box-shadow: 0 5px 15px rgba(89, 118, 172, 0.1);
+        }
+        
+        .career-answer-option input[type="radio"] {
+            margin-right: 15px;
+            margin-top: 3px;
+            transform: scale(1.2);
+        }
+        
+        .career-answer-label {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.5;
+            flex: 1;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-btn-submit {
+            background: linear-gradient(135deg, var(--coffee-crema) 0%, #d4945a 100%);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(193, 128, 65, 0.2);
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-btn-submit:hover {
+            background: linear-gradient(135deg, #b3713a 0%, var(--coffee-crema) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(193, 128, 65, 0.3);
+        }
+        
+        .career-test-btn-back {
+            background: transparent;
+            border: 2px solid var(--soft-sky-blue);
+            color: var(--cornflower-blue);
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-btn-back:hover {
+            background: var(--soft-sky-blue);
+            color: white;
+        }
+        
+        /* НОВЫЕ СТИЛИ ДЛЯ КНОПОК */
+        .career-test-btn-primary {
+            background: linear-gradient(135deg, var(--cornflower-blue) 0%, #5976AC 100%);
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(89, 118, 172, 0.2);
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-btn-primary:hover {
+            background: linear-gradient(135deg, #486194 0%, var(--cornflower-blue) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(89, 118, 172, 0.3);
+        }
+        
+        .career-test-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--cornflower-blue);
+            color: var(--cornflower-blue);
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-btn-secondary:hover {
+            background: rgba(89, 118, 172, 0.1);
+            border-color: var(--soft-sky-blue);
+        }
+        
+        .career-test-progress-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            border: 1px solid rgba(155, 185, 224, 0.2);
+        }
+        
+        .career-test-progress-bar {
+            height: 12px;
+            background-color: rgba(155, 185, 224, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .career-test-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--coffee-crema), var(--cornflower-blue));
+            border-radius: 6px;
+            transition: width 0.5s ease-in-out;
+            width: 0%;
+        }
+        
+        .career-test-progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: var(--cornflower-blue);
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-results-section {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .career-test-results-icon {
+            font-size: 70px;
+            color: var(--coffee-crema);
+            margin-bottom: 20px;
+        }
+        
+        .career-test-results-title {
+            color: var(--cornflower-blue);
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        .career-test-results-description {
+            color: var(--shadowed-lace);
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-family: 'Soyuz Grotesk', sans-serif;
+        }
+        
+        @media (max-width: 768px) {
+            .career-test-container {
+                padding: 25px 20px;
+                margin: 15px;
+            }
+            
+            .career-test-title {
+                font-size: 26px;
+            }
+            
+            .career-question-card {
+                padding: 20px;
+            }
+            
+            .career-answer-option {
+                padding: 15px;
+            }
+            
+            .career-test-btn-primary,
+            .career-test-btn-secondary,
+            .career-test-btn-submit,
+            .career-test-btn-back {
+                padding: 8px 20px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="career-body">
+    <!-- Фоновые круги -->
+    <div class="career-bg-circles">
+        <div class="career-circle-1"></div>
+        <div class="career-circle-2"></div>
+        <div class="career-circle-3"></div>
+        <div class="career-circle-4"></div>
+    </div>
+    
+    <!-- Основной контейнер теста -->
+    <div class="career-test-container">
+        <!-- Шапка теста -->
+        <div class="career-test-header" id="testHeader">
+            <h1 class="career-test-title">Дифференциально-диагностический опросник (ДДО)</h1>
+            <p class="career-test-description">Автор: Е.А. Климов. Определите предпочитаемый тип профессиональной деятельности</p>
+        </div>
+        
+        <!-- Информация о тесте -->
+        <div class="career-test-info" id="testInfo">
+            <h5><i class="fas fa-info-circle mr-2"></i>Инструкция</h5>
+            <p>Перед вами 20 пар утверждений. В каждой паре выберите <strong>один вариант</strong>, который вам ближе. Не пропускайте пары - дайте ответ на каждый вопрос. После выбора ответа нажмите кнопку "Следующий вопрос" для продолжения.</p>
+            <p><strong>Всего 20 пар вопросов.</strong></p>
+        </div>
+        
+        <!-- Прогресс прохождения -->
+        <div class="career-test-progress-container">
+            <div class="career-test-progress-bar">
+                <div class="career-test-progress-fill" id="progressFill"></div>
+            </div>
+            <div class="career-test-progress-text">
+                <span>Прогресс:</span>
+                <span id="progressCounter">0/20</span>
+            </div>
+        </div>
+        
+        <!-- Контейнер для вопросов -->
+        <div id="questionsContainer">
+            <!-- Вопросы будут добавляться динамически -->
+        </div>
+        
+        <!-- Кнопки управления -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+
+            <button class="career-test-btn-back" onclick="window.location.href='lk.html'">
+                <i class="fas fa-arrow-left mr-2"></i>Вернуться в кабинет
+            </button>
+            
+            <div class="d-flex gap-3">
+                <button class="career-test-btn-secondary" id="prevBtn" onclick="prevQuestion()" style="display: none;">
+                    <i class="fas fa-chevron-left mr-2"></i>Назад
+                </button>
+                <button class="career-test-btn-primary" id="nextBtn" onclick="nextQuestion()">
+                    Следующий вопрос <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+                <button class="career-test-btn-submit" id="submitBtn" onclick="submitTest()" style="display: none;">
+                    <i class="fas fa-check-circle mr-2"></i>Завершить тест
+                </button>
+            </div>
+        </div>
+
+        <!-- Секция результатов -->
+        <div class="career-test-results-section" id="resultsSection">
+            <div class="career-test-results-icon">
+                <i class="fas fa-chart-pie"></i>
+            </div>
+            <h2 class="career-test-results-title">Тест завершен!</h2>
+            <p class="career-test-results-description">Ваши результаты сохранены. Теперь вы можете вернуться в личный кабинет и посмотреть диаграмму с вашим профессиональным профилем.</p>
+
+            <button class="career-test-btn-back" onclick="window.location.href='lk.html'">
+                <i class="fas fa-user-circle mr-2"></i>Вернуться в личный кабинет
+            </button>
+        </div>
+    </div>
+    
+    <!-- JavaScript для работы теста -->
+    <script>
+        // Вопросы для теста ДДО Климова (20 пар)
+        const questions = [
+            { id: 1, a: "Ухаживать за животными", b: "Обслуживать машины, приборы (следить, регулировать)" },
+            { id: 2, a: "Помогать больным людям, лечить их", b: "Составлять таблицы, схемы, программы для вычислительных машин" },
+            { id: 3, a: "Следить за качеством книжных иллюстраций, плакатов, художественных открыток", b: "Следить за состоянием, развитием растений" },
+            { id: 4, a: "Обрабатывать материалы (дерево, ткань, металл, пластмассу и т.п.)", b: "Доводить товары до потребителя, рекламировать, продавать" },
+            { id: 5, a: "Обсуждать научно-популярные книги, статьи", b: "Обсуждать художественные книги (или пьесы, концерты)" },
+            { id: 6, a: "Выращивать молодняк (животных какой-либо породы)", b: "Тренировать товарищей (или младших) в выполнении каких-либо действий (трудовых, учебных, спортивных)" },
+            { id: 7, a: "Копировать рисунки, изображения (или настраивать музыкальные инструменты)", b: "Управлять каким-либо грузовым (подъемным или транспортным) средством (подъемным краном, трактором, тепловозом и др.)" },
+            { id: 8, a: "Сообщать, разъяснять людям нужные им сведения (в справочном бюро, на экскурсии и т.д.)", b: "Оформлять выставки, витрины (или участвовать в подготовке пьес, концертов)" },
+            { id: 9, a: "Ремонтировать вещи, изделия (одежду, технику), жилище", b: "Искать и исправлять ошибки в текстах, таблицах, рисунках" },
+            { id: 10, a: "Лечить животных", b: "Выполнять вычисления, расчеты" },
+            { id: 11, a: "Выводить новые сорта растений", b: "Конструировать, проектировать новые виды промышленных изделий (машины, одежду, дома, продукты питания и т.п.)" },
+            { id: 12, a: "Разбирать споры, ссоры между людьми, убеждать, разъяснять, наказывать, поощрять", b: "Разбираться в чертежах, схемах, таблицах (проверять, уточнять, приводить в порядок)" },
+            { id: 13, a: "Наблюдать, изучать работу кружков художественной самодеятельности", b: "Наблюдать, изучать жизнь микробов" },
+            { id: 14, a: "Обслуживать, налаживать медицинские приборы, аппараты", b: "Оказывать людям медицинскую помощь при ранениях, ушибах, ожогах и т.п." },
+            { id: 15, a: "Художественно описывать, изображать события (наблюдаемые и представляемые)", b: "Составлять точные описания-отчеты о наблюдаемых явлениях, событиях, измеряемых объектах и др." },
+            { id: 16, a: "Делать лабораторные анализы в больнице", b: "Принимать, осматривать больных, беседовать с ними, назначать лечение" },
+            { id: 17, a: "Красить или расписывать стены помещений, поверхность изделий", b: "Осуществлять монтаж или сборку машин, приборов" },
+            { id: 18, a: "Организовывать культпоходы сверстников или младших в театры, музеи, экскурсии, туристические походы и т.п.", b: "Играть на сцене, принимать участие в концертах" },
+            { id: 19, a: "Изготовлять по чертежам детали, изделия (машины, одежду), строить здания", b: "Заниматься черчением, копировать чертежи, карты" },
+            { id: 20, a: "Вести борьбу с болезнями растений, с вредителями леса, сада", b: "Работать на клавишных машинах (пишущей машинке, телетайпе, наборной машине и др.)" }
+        ];
+        
+        // КАЖДОМУ ОТВЕТУ СОПОСТАВЛЯЕМ КАТЕГОРИЮ по ID вопроса
+        const questionCategories = {
+            1: { A: "Человек-Природа", B: "Человек-Техника" },
+            2: { A: "Человек-Человек", B: "Человек-Знак" },
+            3: { A: "Человек-Художественный образ", B: "Человек-Природа" },
+            4: { A: "Человек-Техника", B: "Человек-Человек" },
+            5: { A: "Человек-Знак", B: "Человек-Художественный образ" },
+            6: { A: "Человек-Природа", B: "Человек-Человек" },
+            7: { A: "Человек-Художественный образ", B: "Человек-Техника" },
+            8: { A: "Человек-Человек", B: "Человек-Художественный образ" },
+            9: { A: "Человек-Техника", B: "Человек-Знак" },
+            10: { A: "Человек-Природа", B: "Человек-Знак" },
+            11: { A: "Человек-Природа", B: "Человек-Техника" },
+            12: { A: "Человек-Человек", B: "Человек-Знак" },
+            13: { A: "Человек-Художественный образ", B: "Человек-Природа" },
+            14: { A: "Человек-Техника", B: "Человек-Человек" },
+            15: { A: "Человек-Художественный образ", B: "Человек-Знак" },
+            16: { A: "Человек-Знак", B: "Человек-Человек" },
+            17: { A: "Человек-Художественный образ", B: "Человек-Техника" },
+            18: { A: "Человек-Человек", B: "Человек-Художественный образ" },
+            19: { A: "Человек-Техника", B: "Человек-Знак" },
+            20: { A: "Человек-Природа", B: "Человек-Знак" }
+        };
+        
+        let userAnswers = {};
+        let currentQuestion = 0;
+        let testStartTime = Date.now();
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            testStartTime = Date.now();
+            showQuestion(currentQuestion);
+            updateProgress();
+            updateButtons();
+        });
+        
+        // Показать вопрос
+        function showQuestion(index) {
+            const container = document.getElementById('questionsContainer');
+            const question = questions[index];
+            
+            const existingAnswer = userAnswers[question.id];
+            
+            container.innerHTML = `
+                <div class="career-question-card">
+                    <div>
+                        <span class="career-question-number">${question.id}</span>
+                        <span class="career-question-text">Предположим, что после соответствующего обучения вы сможете выполнить любую работу. Но если бы вам пришлось выбирать только одну из двух возможностей, что бы вы предпочли?</span>
+                    </div>
+                    
+                    <div class="career-answer-options">
+                        <label class="career-answer-option ${existingAnswer === 'A' ? 'selected' : ''}" onclick="selectAnswer(${question.id}, 'A')">
+                            <input type="radio" name="q${question.id}" ${existingAnswer === 'A' ? 'checked' : ''}>
+                            <span class="career-answer-label">${question.a}</span>
+                        </label>
+                        
+                        <label class="career-answer-option ${existingAnswer === 'B' ? 'selected' : ''}" onclick="selectAnswer(${question.id}, 'B')">
+                            <input type="radio" name="q${question.id}" ${existingAnswer === 'B' ? 'checked' : ''}>
+                            <span class="career-answer-label">${question.b}</span>
+                        </label>
+                    </div>
+                </div>
+            `;
+            
+            updateProgress();
+            updateButtons();
+        }
+        
+        // Выбрать ответ
+        function selectAnswer(questionId, answer) {
+            userAnswers[questionId] = answer;
+            
+            // Обновляем класс selected для вариантов ответа
+            const options = document.querySelectorAll('.career-answer-option');
+            options.forEach(opt => {
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio && radio.name === `q${questionId}` && radio.value !== undefined) {
+                    // Просто для наглядности, но radio не имеет value в нашей разметке
+                    if (answer === 'A' && opt.innerHTML.includes(questions.find(q => q.id === questionId).a)) {
+                        opt.classList.add('selected');
+                    } else if (answer === 'B' && opt.innerHTML.includes(questions.find(q => q.id === questionId).b)) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                }
+            });
+        }
+        
+        // Следующий вопрос
+        function nextQuestion() {
+            const currentQuestionId = questions[currentQuestion].id;
+            if (!userAnswers[currentQuestionId]) {
+                alert('Пожалуйста, выберите ответ на текущий вопрос.');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        // Предыдущий вопрос
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+        
+        // Обновить прогресс
+        function updateProgress() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const progressPercent = (answeredCount / questions.length) * 100;
+            
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            document.getElementById('progressCounter').textContent = `${answeredCount}/${questions.length}`;
+        }
+        
+        // Обновить кнопки
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Кнопка "Назад"
+            if (currentQuestion > 0) {
+                prevBtn.style.display = 'inline-block';
+            } else {
+                prevBtn.style.display = 'none';
+            }
+            
+            // Кнопка "Следующий вопрос" или "Завершить тест"
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+        }
+        
+        // ФУНКЦИЯ ДЛЯ ОТПРАВКИ НА БЭКЕНД (заглушка, так как бэкенда нет)
+        async function sendResultsToBackend(answers) {
+            // В статической версии просто имитируем успех
+            return { success: true, data: { message: "Сохранено локально" } };
+        }
+        
+        // СОХРАНИТЬ ДЛЯ ПОВТОРНОЙ ОТПРАВКИ
+        function saveForRetry(answers) {
+            const pending = JSON.parse(localStorage.getItem('pendingKlimovResults') || '[]');
+            pending.push({
+                answers: answers,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('pendingKlimovResults', JSON.stringify(pending));
+            console.log('Сохранено для повторной отправки');
+        }
+        
+        // ОТПРАВИТЬ ТЕСТ
+        async function submitTest() {
+            // Проверяем, что ответили на все вопросы
+            if (Object.keys(userAnswers).length < questions.length) {
+                alert(`Пожалуйста, ответьте на все вопросы теста. Осталось ${questions.length - Object.keys(userAnswers).length} вопросов.`);
+                return;
+            }
+            
+            // Блокируем кнопку
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Отправляем...';
+            
+            // 1. Сохраняем в LocalStorage
+            const allResults = JSON.parse(localStorage.getItem('testResults')) || {};
+            allResults.klimov = {
+                answers: userAnswers,
+                submittedAt: new Date().toISOString()
+            };
+            localStorage.setItem('testResults', JSON.stringify(allResults));
+            
+            // 2. Отмечаем тест как пройденный
+            const userData = JSON.parse(localStorage.getItem('currentUser')) || {};
+            if (!userData.testsCompleted) {
+                userData.testsCompleted = {};
+            }
+            userData.testsCompleted.klimov = true;
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            
+            // 3. Отправляем на бэкенд (заглушка)
+            setTimeout(() => {
+                showResults();
+            }, 500);
+        }
+        
+        // Показать результаты
+        function showResults() {
+            document.getElementById('questionsContainer').style.display = 'none';
+            document.getElementById('prevBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('testInfo').style.display = 'none';
+            document.querySelector('.career-test-progress-container').style.display = 'none';
+            
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Обработка клавиатуры
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                e.preventDefault();
+                nextQuestion();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevQuestion();
+            } else if (e.key === '1') {
+                e.preventDefault();
+                selectAnswer(questions[currentQuestion].id, 'A');
+            } else if (e.key === '2') {
+                e.preventDefault();
+                selectAnswer(questions[currentQuestion].id, 'B');
+            }
+        });
+    </script>
+</body>
+</html>
+```
